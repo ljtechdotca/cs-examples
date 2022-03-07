@@ -1,0 +1,15 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <ApplicationIcon>favicon.ico</ApplicationIcon>
+    <DebugSymbols>false</DebugSymbols>
+    <DebugType>None</DebugType>
+    <OutputType>WinExe</OutputType>
+    <PublishSingleFile>true</PublishSingleFile>
+    <RuntimeIdentifier>win-x64</RuntimeIdentifier>
+    <TargetFramework>net6.0-windows</TargetFramework>
+    <SelfContained>false</SelfContained>
+    <UseWPF>true</UseWPF>
+  </PropertyGroup>
+
+</Project>

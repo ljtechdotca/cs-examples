@@ -1,0 +1,8 @@
+# vscode Settings
+.vscode
+
+# Other
+/obj
+/obj/*
+/bin/debug
+/bin/debug/*
