@@ -1,0 +1,78 @@
+﻿<Window x:Class="postman.MainWindow" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:local="clr-namespace:postman" mc:Ignorable="d" Title="MainWindow" Height="768" Width="1536">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="16" />
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="16" />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="16" />
+            <RowDefinition Height="2*" />
+            <RowDefinition Height="16" />
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="16" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="16" />
+        </Grid.RowDefinitions>
+        <ScrollViewer Grid.Column="1" Grid.Row="1">
+            <TextBlock Margin="16" Name="Response" FontFamily="Courier New" TextWrapping="wrap">
+                {
+                    status: 200, 
+                    data: "Hello World",
+                }
+            </TextBlock>
+        </ScrollViewer>
+        <StackPanel Grid.Column="1" Grid.Row="3">
+            <Grid Margin="0 16">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="100" />
+                </Grid.ColumnDefinitions>
+                <DockPanel Grid.Column="0" LastChildFill="True">
+                    <TextBlock Padding="8">
+                        Fetch
+                    </TextBlock>
+                    <ComboBox Padding="8" Width="100" SelectedIndex="0" Name="Method">
+                        <ComboBoxItem Padding="8" Content="GET" />
+                        <ComboBoxItem Padding="8" Content="POST" />
+                        <ComboBoxItem Padding="8" Content="PUT" />
+                        <ComboBoxItem Padding="8" Content="DELETE" />
+                    </ComboBox>
+                    <TextBox TextChanged="UrlChange" Padding="8" Name="Url" />
+                </DockPanel>
+                <Button Grid.Column="1" Click="Submit" Padding="8">
+                    Submit
+                </Button>
+            </Grid>
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="100" />
+                </Grid.ColumnDefinitions>
+                <Button Grid.Column="1" Click="Add" Padding="8">
+                    Add Param
+                </Button>
+            </Grid>
+        </StackPanel>
+        <ScrollViewer Grid.Column="1" Grid.Row="5">
+            <ItemsControl Name="QueryParams">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Grid Margin="0 4">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="100" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="100" />
+                            </Grid.ColumnDefinitions>
+                            <TextBox Grid.Column="0" Padding="8" Name="Key" Tag="{Binding key}" TextChanged="KeyChange" Text="{Binding key}" />
+                            <TextBox Grid.Column="1" Padding="8" Name="Value" Tag="{Binding value}" TextChanged="ValueChange" Text="{Binding value}" />
+                            <Button Grid.Column="2" Click="Remove" Tag="{Binding}" Padding="8">
+                                Remove
+                            </Button>
+                        </Grid>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </ScrollViewer>
+    </Grid>
+</Window>
