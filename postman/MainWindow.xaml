@@ -85,16 +85,29 @@
               </Grid>
             </ScrollViewer>
           </TabItem>
-          <TabItem Header="Security" />
+          <TabItem Header="Security">
+            <Button Click="TestTree" Padding="4">
+              Test Tree
+            </Button>
+          </TabItem>
           <TabItem Header="Details" />
         </TabControl>
       </Grid>
-      <TextBlock Margin="16" Name="Response" FontFamily="Courier New" TextWrapping="wrap" Grid.Column="1" Grid.Row="3">
-        {
-            status: 200, 
-            data: "Hello World",
-        }
-      </TextBlock>
+      <TabControl Grid.Column="1" Grid.Row="3">
+        <TabItem Header="Raw">
+          <TextBlock Margin="16" Name="ResponseRaw" FontFamily="Courier New" TextWrapping="wrap" Grid.Column="1" Grid.Row="3">
+            {
+                status: 200, 
+                data: "Hello World",
+            }
+          </TextBlock>
+        </TabItem>
+        <TabItem Header="Tree">
+          <TreeView Name="ResponseTree">
+
+          </TreeView>
+        </TabItem>
+      </TabControl>
     </Grid>
   </ScrollViewer>
 </Window>

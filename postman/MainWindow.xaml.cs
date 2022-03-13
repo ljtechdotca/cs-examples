@@ -7,6 +7,7 @@ using System.Collections.ObjectModel;
 using System.Web;
 using System.Linq;
 using System.Windows.Controls;
+using Newtonsoft.Json.Linq;
 
 namespace postman
 {
@@ -16,16 +17,19 @@ namespace postman
     {
         static readonly HttpClient client = new HttpClient();
         private ObservableCollection<Param> QueryParamsCollection = new();
+        private ObservableCollection<TreeViewItem> ResponseTreeCollection = new();
         private bool preventTextChanged = false;
 
         public MainWindow()
         {
             InitializeComponent();
             Url.Text = "https://ljtech.ca/api/github";
-            Response.Text = @"{
+            ResponseRaw.Text = @"{
     ""status"": 200, 
-    ""data"": ""Hello World"",
+    ""data"": [""Hello World"", ""Lorem Ipsum""],
+    ""payload"": { ""array"": [""Hello World"", ""Lorem Ipsum""], ""title"": ""Lorem Ipsum Dolor Set Amet"" },
 }";
+            ResponseTree.ItemsSource = ResponseTreeCollection;
             QueryParams.ItemsSource = QueryParamsCollection;
         }
 
@@ -104,6 +108,55 @@ namespace postman
             Url.Text = $"{domain}{query}";
         }
 
+        // Task : extract logic for recursive operations
+        void TestTree(object sender, RoutedEventArgs args)
+        {
+            JToken token = JsonConvert.DeserializeObject<JToken>(ResponseRaw.Text);
+            ResponseTreeCollection.Clear();
+            TreeViewItem CreateTreeViewItem(JToken token)
+            {
+                TreeViewItem RootItem = new TreeViewItem();
+                RootItem.IsExpanded = false;
+                switch (token.Type)
+                {
+                    case JTokenType.Property:
+                        RootItem = CreateTreeViewItem((token as JProperty).Value);
+                        RootItem.Header = $"{(token as JProperty).Name}";
+                        break;
+
+                    case JTokenType.Array:
+                        RootItem.Header = "Array";
+                        int index = 0;
+                        foreach (JToken value in (token as JArray))
+                        {
+                            var NestedItem = CreateTreeViewItem(value);
+                            NestedItem.Header = $"{index}: {NestedItem.Header}";
+                            RootItem.Items.Add(NestedItem);
+                            index++;
+                        }
+                        break;
+
+                    case JTokenType.Object:
+                        RootItem.Header = "Object";
+                        foreach (KeyValuePair<string, JToken> item in (token as JObject))
+                        {
+                            var NestedItem = CreateTreeViewItem(item.Value);
+                            NestedItem.Header = $"{item.Key}: {NestedItem.Header}";
+                            RootItem.Items.Add(NestedItem);
+                        }
+                        break;
+
+                    default:
+                        RootItem.Header = $"{token}";
+                        
+                        break;
+                }
+
+                return RootItem;
+            }
+            ResponseTreeCollection.Add(CreateTreeViewItem(token));
+        }
+
         async void Submit(object sender, RoutedEventArgs args)
         {
             if (!Uri.IsWellFormedUriString(Url.Text, UriKind.Absolute))
@@ -138,12 +191,12 @@ namespace postman
                     response = await client.DeleteAsync(Url.Text);
                     break;
                 default:
-                    Response.Text = "Bad Method";
+                    ResponseRaw.Text = "Bad Method";
                     break;
             }
             if (response == null)
             {
-                Response.Text = "No Response";
+                ResponseRaw.Text = "No Response";
                 Console.WriteLine("No Response");
                 return;
             }
@@ -152,17 +205,17 @@ namespace postman
             switch (mediaType)
             {
                 case "application/json":
-                    var temp = JsonConvert.DeserializeObject(responseBody);
-                    Response.Text = temp?.ToString();
+                    var token = JsonConvert.DeserializeObject(responseBody);
+                    ResponseRaw.Text = token.ToString();
                     break;
                 case "text/html":
-                    Response.Text = responseBody;
+                    ResponseRaw.Text = responseBody;
                     break;
                 case "image/gif":
-                    Response.Text = responseBody;
+                    ResponseRaw.Text = responseBody;
                     break;
                 default:
-                    Response.Text = "Bad Media Type";
+                    ResponseRaw.Text = "Bad Media Type";
                     break;
             }
         }
