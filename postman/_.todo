@@ -1,15 +1,15 @@
 Research:
-  ☐ test out the put delete post
-  ☐ query params gui
-    requires an onchange event maybe
-    add query param button
-    fix layout
+  ☐ follow Kanas' gist because its massive brain stuff
+  ☐ headers
+  ☐ body
 
 Working:
 
 
 Finished:
-  ✔ handle errors when not searching valid urls (see kana tip from other day) @done(22-03-10 07:40)
-  ✔ handle methods other than get @done(22-03-11 18:42)
+  ✔ interactive url and params @done(22-03-12 17:12)
+    ✔ add params @done(22-03-12 17:12)
+    ✔ remove params @done(22-03-12 17:12)
+    ✔ update params @done(22-03-12 17:12)
 
 Hidden

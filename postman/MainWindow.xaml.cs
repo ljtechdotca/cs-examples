@@ -5,6 +5,7 @@ using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Web;
+using System.Linq;
 using System.Windows.Controls;
 
 namespace postman
@@ -14,24 +15,28 @@ namespace postman
     public partial class MainWindow : Window
     {
         static readonly HttpClient client = new HttpClient();
-        ObservableCollection<Param> QueryParamsCollection = new();
+        private ObservableCollection<Param> QueryParamsCollection = new();
+        private bool preventTextChanged = false;
 
         public MainWindow()
         {
             InitializeComponent();
             Url.Text = "https://ljtech.ca/api/github";
-            Response.Text = @"
-                {
-                    ""status"": 200, 
-                    ""data"": ""Hello World"",
-                }
-            ";
+            Response.Text = @"{
+    ""status"": 200, 
+    ""data"": ""Hello World"",
+}";
             QueryParams.ItemsSource = QueryParamsCollection;
         }
 
-        void UrlChange(object sender, RoutedEventArgs e)
+        void ChangeUrl(object sender, RoutedEventArgs args)
         {
             if (sender is not TextBox textBox || !Uri.IsWellFormedUriString(Url.Text, UriKind.Absolute)) return;
+            if (preventTextChanged)
+            {
+                preventTextChanged = false;
+                return;
+            }
             string text = textBox.Text;
             string name = textBox.Name;
             Uri uri = new Uri(Url.Text);
@@ -41,82 +46,81 @@ namespace postman
             {
                 QueryParamsCollection.Add(new Param(parsedQueryParam as string, parsedQueryParams[parsedQueryParam as string]));
             }
+
+            args.Handled = true;
         }
 
-        void KeyChange(object sender, RoutedEventArgs e)
+        void ChangeKey(object sender, RoutedEventArgs args)
         {
+            if (!Uri.IsWellFormedUriString(Url.Text, UriKind.Absolute)) return;
             if (sender is not TextBox textBox) return;
-            string text = textBox.Text;
-            string name = textBox.Name;
-            string tag = textBox.Tag.ToString();
-            Console.WriteLine(text);
-            Console.WriteLine(name);
-            Console.WriteLine(tag);
+            if (textBox.Tag is not Param tag) return;
+            preventTextChanged = true;
+            int index = QueryParamsCollection.IndexOf(tag);
+            if (index == -1) return;
+            QueryParamsCollection[index] = tag with { key = textBox.Text };
+            string query = "?" + string.Join("&", QueryParamsCollection.Select(item => ($"{item.key}={item.value}")));
+            string domain = Url.Text.Split("?")[0];
+            Url.Text = $"{domain}{query}";
+            args.Handled = true;
         }
 
-        void ValueChange(object sender, RoutedEventArgs e)
+        void ChangeValue(object sender, RoutedEventArgs args)
         {
+            if (!Uri.IsWellFormedUriString(Url.Text, UriKind.Absolute)) return;
             if (sender is not TextBox textBox) return;
-            string text = textBox.Text;
-            string name = textBox.Name;
-            string tag = textBox.Tag.ToString();
-            Console.WriteLine(text);
-            Console.WriteLine(name);
-            Console.WriteLine(tag);
+            if (textBox.Tag is not Param tag) return;
+            preventTextChanged = true;
+            int index = QueryParamsCollection.IndexOf(tag);
+            if (index == -1) return;
+            QueryParamsCollection[index] = tag with { value = textBox.Text };
+            string query = "?" + string.Join("&", QueryParamsCollection.Select(item => ($"{item.key}={item.value}")));
+            string domain = Url.Text.Split("?")[0];
+            Url.Text = $"{domain}{query}";
+            args.Handled = true;
         }
 
-        void Add(object sender, RoutedEventArgs e)
+        void Add(object sender, RoutedEventArgs args)
         {
+            Param newParam = new Param("", "");
+            if (QueryParamsCollection.IndexOf(newParam) != -1) return;
             QueryParamsCollection.Add(new Param("", ""));
-            if (Url.Text.Contains("?"))
-            {
-                Url.Text += "&=";
-            }
-            else
-            {
-                Url.Text += "?=";
-            }
+            string query = "?" + string.Join("&", QueryParamsCollection.Select(item => ($"{item.key}={item.value}")));
+            string domain = Url.Text.Split("?")[0];
+            Url.Text = $"{domain}{query}";
         }
 
-        void Remove(object sender, RoutedEventArgs e)
+        void Remove(object sender, RoutedEventArgs args)
         {
             Button button = (Button)sender;
             Param tag = button.Tag as Param;
-            string target = "";
-            if (Url.Text.Contains("?"))
-            {
-                target = $"?{tag.key}={tag.value}";
-            }
-            else
-            {
-                target = $"&{tag.key}={tag.value}";
-            }
-            Url.Text = Url.Text.Replace(target, "");
             QueryParamsCollection.Remove(tag as Param);
+            string query = "";
+            string domain = Url.Text.Split("?")[0];
+            if (QueryParamsCollection.Count > 0)
+            {
+                query = "?" + string.Join("&", QueryParamsCollection.Select(item => ($"{item.key}={item.value}")));
+            }
+            Url.Text = $"{domain}{query}";
         }
 
-        async void Submit(object sender, RoutedEventArgs e)
+        async void Submit(object sender, RoutedEventArgs args)
         {
             if (!Uri.IsWellFormedUriString(Url.Text, UriKind.Absolute))
             {
                 Console.WriteLine($@"Bad URL: ""{Url.Text}""");
                 return;
             };
-
             Uri uri = new Uri(Url.Text);
-
-            Console.WriteLine($"fetching {Url.Text}");
-
-
             var parsedQueryParams = HttpUtility.ParseQueryString(uri.Query);
+            QueryParamsCollection.Clear();
             foreach (var parsedQueryParam in parsedQueryParams)
             {
                 QueryParamsCollection.Add(new Param(parsedQueryParam as string, parsedQueryParams[parsedQueryParam as string]));
             }
-
             HttpResponseMessage response = null;
 
-            // task : figure this form out
+            // task : change form
             var form = new FormUrlEncodedContent(new Dictionary<string, string> { { "name", "lj" }, { "description", "human" } });
 
             switch (Method.Text)
