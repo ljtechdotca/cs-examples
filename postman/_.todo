@@ -1,10 +1,21 @@
 Research:
+  ☐ use DataGrid `https://www.tutorialspoint.com/xaml/xaml_datagrid.htm`
+  ☐ toggle params
   ☐ headers
-  ☐ body
-
+    toggle headers
+  ☐ popup for response
+  ☐ abstract code from MainWindow
+    maybe make component?
+    maybe make MainWindow.xaml.2.cs
+    
 Working:
+  ☐ body
+    ✔ hook up to the request @done(22-03-13 16:15)
+    choose between multipart form, raw, and json maybe?
 
 Finished:
+  ✔ build tree on response @done(22-03-13 14:51)
+  ✔ api testing server @done(22-03-13 14:43)
   ✔ treeview ` https://docs.microsoft.com/en-us/dotnet/desktop/wpf/controls/treeview-overview?view=netframeworkdesktop-4.8 ` @done(22-03-13 02:41)
   ✔ follow Kanas' gist because its massive brain stuff @done(22-03-12 19:00)
   ✔ interactive url and params @done(22-03-12 17:12)

@@ -8,6 +8,8 @@ using System.Web;
 using System.Linq;
 using System.Windows.Controls;
 using Newtonsoft.Json.Linq;
+using System.Windows.Documents;
+using System.Text;
 
 namespace postman
 {
@@ -31,6 +33,12 @@ namespace postman
 }";
             ResponseTree.ItemsSource = ResponseTreeCollection;
             QueryParams.ItemsSource = QueryParamsCollection;
+            RequestBody.Inlines.Add(@"{
+    ""id"": 123, 
+    ""name"": ""Lorem Ipsum"",
+    ""payload"": { ""array"": [""Hello World"", ""Lorem Ipsum""], ""title"": ""Lorem Ipsum Dolor Set Amet"" },
+}");
+            BuildTree(JsonConvert.DeserializeObject<JToken>(ResponseRaw.Text));
         }
 
         void ChangeUrl(object sender, RoutedEventArgs args)
@@ -108,10 +116,8 @@ namespace postman
             Url.Text = $"{domain}{query}";
         }
 
-        // Task : extract logic for recursive operations
-        void TestTree(object sender, RoutedEventArgs args)
+        void BuildTree(JToken token)
         {
-            JToken token = JsonConvert.DeserializeObject<JToken>(ResponseRaw.Text);
             ResponseTreeCollection.Clear();
             TreeViewItem CreateTreeViewItem(JToken token)
             {
@@ -148,7 +154,7 @@ namespace postman
 
                     default:
                         RootItem.Header = $"{token}";
-                        
+
                         break;
                 }
 
@@ -174,7 +180,11 @@ namespace postman
             HttpResponseMessage response = null;
 
             // task : change form
-            var form = new FormUrlEncodedContent(new Dictionary<string, string> { { "name", "lj" }, { "description", "human" } });
+            // var form = new FormUrlEncodedContent(new Dictionary<string, string> { { "name", "lj" }, { "description", "human" } });
+            // A container for name/value tuples encoded using application/x-www-form-urlencoded MIME type.
+
+            string serializedJson = JsonConvert.SerializeObject(new TextRange(RequestBody.ContentStart, RequestBody.ContentEnd).Text);
+            StringContent json = new StringContent(serializedJson, Encoding.UTF8, "application/json");
 
             switch (Method.Text)
             {
@@ -182,10 +192,10 @@ namespace postman
                     response = await client.GetAsync(Url.Text);
                     break;
                 case "POST":
-                    response = await client.PostAsync(Url.Text, form);
+                    response = await client.PostAsync(Url.Text, json);
                     break;
                 case "PUT":
-                    response = await client.PutAsync(Url.Text, form);
+                    response = await client.PutAsync(Url.Text, json);
                     break;
                 case "DELETE":
                     response = await client.DeleteAsync(Url.Text);
@@ -205,7 +215,8 @@ namespace postman
             switch (mediaType)
             {
                 case "application/json":
-                    var token = JsonConvert.DeserializeObject(responseBody);
+                    var token = JsonConvert.DeserializeObject<JToken>(responseBody);
+                    BuildTree(token);
                     ResponseRaw.Text = token.ToString();
                     break;
                 case "text/html":

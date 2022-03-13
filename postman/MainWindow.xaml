@@ -45,7 +45,7 @@
       <!-- TABS -->
       <Grid Grid.Column="1" Grid.Row="2">
         <TabControl>
-          <TabItem Header="Query Params">
+          <TabItem Header="Params">
             <ScrollViewer VerticalScrollBarVisibility="Auto">
               <Grid>
                 <Grid.RowDefinitions>
@@ -85,27 +85,26 @@
               </Grid>
             </ScrollViewer>
           </TabItem>
-          <TabItem Header="Security">
-            <Button Click="TestTree" Padding="4">
-              Test Tree
-            </Button>
+          <TabItem Header="Headers">
+
           </TabItem>
-          <TabItem Header="Details" />
+          <TabItem Header="Body">
+
+            <RichTextBox>
+              <FlowDocument>
+                <Paragraph Name="RequestBody" LineHeight="1"></Paragraph>
+              </FlowDocument>
+            </RichTextBox>
+
+          </TabItem>
         </TabControl>
       </Grid>
       <TabControl Grid.Column="1" Grid.Row="3">
         <TabItem Header="Raw">
-          <TextBlock Margin="16" Name="ResponseRaw" FontFamily="Courier New" TextWrapping="wrap" Grid.Column="1" Grid.Row="3">
-            {
-                status: 200, 
-                data: "Hello World",
-            }
-          </TextBlock>
+          <TextBlock Margin="16" Name="ResponseRaw" FontFamily="Courier New" TextWrapping="wrap" Grid.Column="1" Grid.Row="3" />
         </TabItem>
         <TabItem Header="Tree">
-          <TreeView Name="ResponseTree">
-
-          </TreeView>
+          <TreeView Name="ResponseTree" />
         </TabItem>
       </TabControl>
     </Grid>
