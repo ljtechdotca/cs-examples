@@ -49,35 +49,28 @@
             <ScrollViewer VerticalScrollBarVisibility="Auto">
               <Grid>
                 <Grid.RowDefinitions>
-                  <RowDefinition Height="auto" />
+                  <RowDefinition Height="40" />
                   <RowDefinition Height="auto" />
                 </Grid.RowDefinitions>
-                <Grid Grid.Row="0">
-                  <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="100" />
-                    <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="100" />
-                  </Grid.ColumnDefinitions>
-                  <TextBlock Grid.Column="0" Padding="4" Text="KEY" />
-                  <TextBlock Grid.Column="1" Padding="4" Text="VALUE" />
-                  <Button Grid.Column="2" Click="Add" Padding="4">
+                <WrapPanel Grid.Row="0">
+                  <Button Click="Add" Padding="4">
                     Add Param
                   </Button>
-                </Grid>
+                </WrapPanel>
                 <ItemsControl Name="QueryParams" Grid.Row="1">
                   <ItemsControl.ItemTemplate>
                     <DataTemplate>
                       <Grid>
                         <Grid.ColumnDefinitions>
+                          <ColumnDefinition Width="Auto" />
                           <ColumnDefinition Width="100" />
                           <ColumnDefinition Width="*" />
                           <ColumnDefinition Width="100" />
                         </Grid.ColumnDefinitions>
-                        <TextBox Grid.Column="0" Padding="4" Name="Key" Tag="{Binding}" TextChanged="ChangeKey" Text="{Binding key}" />
-                        <TextBox Grid.Column="1" Padding="4" Name="Value" Tag="{Binding}" TextChanged="ChangeValue" Text="{Binding value}" />
-                        <Button Grid.Column="2" Click="Remove" Tag="{Binding}" Padding="4">
-                          Remove
-                        </Button>
+                        <CheckBox IsChecked="{Binding active}" Grid.Column="0" Checked="Check" Unchecked="Uncheck" Tag="{Binding}" Padding="4" />
+                        <TextBox Padding="4" Grid.Column="1" TextChanged="ChangeParams" Name="Key" Tag="{Binding}" Text="{Binding key}" />
+                        <TextBox Padding="4" Grid.Column="2" TextChanged="ChangeParams" Name="Value" Tag="{Binding}" Text="{Binding value}" />
+                        <Button Grid.Column="3" Padding="4" Click="Remove" Tag="{Binding}">X</Button>
                       </Grid>
                     </DataTemplate>
                   </ItemsControl.ItemTemplate>

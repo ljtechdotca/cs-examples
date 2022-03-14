@@ -13,7 +13,7 @@ using System.Text;
 
 namespace postman
 {
-    public record Param(string key, string value);
+    public record Param(bool active, string key, string value);
 
     public partial class MainWindow : Window
     {
@@ -56,50 +56,66 @@ namespace postman
             QueryParamsCollection.Clear();
             foreach (var parsedQueryParam in parsedQueryParams)
             {
-                QueryParamsCollection.Add(new Param(parsedQueryParam as string, parsedQueryParams[parsedQueryParam as string]));
+                QueryParamsCollection.Add(new Param(true, parsedQueryParam as string, parsedQueryParams[parsedQueryParam as string]));
             }
 
             args.Handled = true;
         }
 
-        void ChangeKey(object sender, RoutedEventArgs args)
+        void ChangeParams(object sender, RoutedEventArgs args)
         {
             if (!Uri.IsWellFormedUriString(Url.Text, UriKind.Absolute)) return;
-            if (sender is not TextBox textBox) return;
-            if (textBox.Tag is not Param tag) return;
             preventTextChanged = true;
-            int index = QueryParamsCollection.IndexOf(tag);
-            if (index == -1) return;
-            QueryParamsCollection[index] = tag with { key = textBox.Text };
-            string query = "?" + string.Join("&", QueryParamsCollection.Select(item => ($"{item.key}={item.value}")));
-            string domain = Url.Text.Split("?")[0];
-            Url.Text = $"{domain}{query}";
-            args.Handled = true;
-        }
 
-        void ChangeValue(object sender, RoutedEventArgs args)
-        {
-            if (!Uri.IsWellFormedUriString(Url.Text, UriKind.Absolute)) return;
-            if (sender is not TextBox textBox) return;
-            if (textBox.Tag is not Param tag) return;
-            preventTextChanged = true;
-            int index = QueryParamsCollection.IndexOf(tag);
+            var param = sender as Param;
+            int index = QueryParamsCollection.IndexOf(param);
             if (index == -1) return;
-            QueryParamsCollection[index] = tag with { value = textBox.Text };
+            QueryParamsCollection[index] = param;
             string query = "?" + string.Join("&", QueryParamsCollection.Select(item => ($"{item.key}={item.value}")));
             string domain = Url.Text.Split("?")[0];
             Url.Text = $"{domain}{query}";
+
+            Console.WriteLine(param);
+
             args.Handled = true;
         }
 
         void Add(object sender, RoutedEventArgs args)
         {
-            Param newParam = new Param("", "");
+            Param newParam = new Param(true, "", "");
             if (QueryParamsCollection.IndexOf(newParam) != -1) return;
-            QueryParamsCollection.Add(new Param("", ""));
-            string query = "?" + string.Join("&", QueryParamsCollection.Select(item => ($"{item.key}={item.value}")));
+            QueryParamsCollection.Add(new Param(true, "", ""));
+            string query = "?" + string.Join("&", QueryParamsCollection.Where(item => item.active).Select(item => ($"{item.key}={item.value}"))); string domain = Url.Text.Split("?")[0];
+            Url.Text = $"{domain}{query}";
+        }
+
+        void Check(object sender, RoutedEventArgs args)
+        {
+              preventTextChanged = true;
+
+            var param = sender as Param;
+            int index = QueryParamsCollection.IndexOf(param);
+            if (index == -1) return;
+            QueryParamsCollection[index] = param with { active = true };
+            string query = "?" + string.Join("&", QueryParamsCollection.Where(item => item.active).Select(item => ($"{item.key}={item.value}")));
             string domain = Url.Text.Split("?")[0];
             Url.Text = $"{domain}{query}";
+
+            args.Handled = true;
+        }
+
+        void Uncheck(object sender, RoutedEventArgs args)
+        {
+                preventTextChanged = true;
+
+            var param = sender as Param;
+            int index = QueryParamsCollection.IndexOf(param);
+            if (index == -1) return;
+            QueryParamsCollection[index] = param with { active = false };
+            string query = "?" + string.Join("&", QueryParamsCollection.Where(item => item.active).Select(item => ($"{item.key}={item.value}"))); string domain = Url.Text.Split("?")[0];
+            Url.Text = $"{domain}{query}";
+
+            args.Handled = true;
         }
 
         void Remove(object sender, RoutedEventArgs args)
@@ -175,7 +191,7 @@ namespace postman
             QueryParamsCollection.Clear();
             foreach (var parsedQueryParam in parsedQueryParams)
             {
-                QueryParamsCollection.Add(new Param(parsedQueryParam as string, parsedQueryParams[parsedQueryParam as string]));
+                QueryParamsCollection.Add(new Param(true, parsedQueryParam as string, parsedQueryParams[parsedQueryParam as string]));
             }
             HttpResponseMessage response = null;
 

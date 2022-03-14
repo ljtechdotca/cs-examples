@@ -1,19 +1,31 @@
 Research:
-  ☐ use DataGrid `https://www.tutorialspoint.com/xaml/xaml_datagrid.htm`
-  ☐ toggle params
+
+
   ☐ headers
     toggle headers
+
   ☐ popup for response
+
   ☐ abstract code from MainWindow
     maybe make component?
     maybe make MainWindow.xaml.2.cs
     
 Working:
+
+
+  ☐ toggle params
+
+  ☐ use DataGrid `https://www.tutorialspoint.com/xaml/xaml_datagrid.htm`
+    ✔ is mapping items @done(22-03-13 18:45)
+    events are not sending data as expected and not setting when expected
+    ☐ fix on event handler
+
   ☐ body
     ✔ hook up to the request @done(22-03-13 16:15)
     choose between multipart form, raw, and json maybe?
 
 Finished:
+  ✔ remove params @done(22-03-13 19:42)
   ✔ build tree on response @done(22-03-13 14:51)
   ✔ api testing server @done(22-03-13 14:43)
   ✔ treeview ` https://docs.microsoft.com/en-us/dotnet/desktop/wpf/controls/treeview-overview?view=netframeworkdesktop-4.8 ` @done(22-03-13 02:41)
