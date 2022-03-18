@@ -19,6 +19,10 @@ namespace postman
     {
         static readonly HttpClient client = new HttpClient();
         private ObservableCollection<Param> QueryParamsCollection = new();
+        private ObservableCollection<Param> HeadersCollection = new()
+        {
+
+        };
         private ObservableCollection<TreeViewItem> ResponseTreeCollection = new();
         private bool preventTextChanged = false;
 
@@ -33,6 +37,7 @@ namespace postman
 }";
             ResponseTree.ItemsSource = ResponseTreeCollection;
             QueryParams.ItemsSource = QueryParamsCollection;
+            Headers.ItemsSource = HeadersCollection;
             RequestBody.Inlines.Add(@"{
     ""id"": 123, 
     ""name"": ""Lorem Ipsum"",
@@ -43,7 +48,9 @@ namespace postman
 
         void ChangeUrl(object sender, RoutedEventArgs args)
         {
-            if (sender is not TextBox textBox || !Uri.IsWellFormedUriString(Url.Text, UriKind.Absolute)) return;
+            if (sender is not TextBox textBox) return;
+            string encodedUrl = HttpUtility.UrlEncode(Url.Text);
+
             if (preventTextChanged)
             {
                 preventTextChanged = false;
@@ -51,7 +58,7 @@ namespace postman
             }
             string text = textBox.Text;
             string name = textBox.Name;
-            Uri uri = new Uri(Url.Text);
+            Uri uri = new Uri(encodedUrl);
             var parsedQueryParams = HttpUtility.ParseQueryString(uri.Query);
             QueryParamsCollection.Clear();
             foreach (var parsedQueryParam in parsedQueryParams)
@@ -62,59 +69,86 @@ namespace postman
             args.Handled = true;
         }
 
-        void ChangeParams(object sender, RoutedEventArgs args)
+        void ChangeKey(object sender, RoutedEventArgs args)
         {
-            if (!Uri.IsWellFormedUriString(Url.Text, UriKind.Absolute)) return;
+            if (sender is not TextBox textBox) return;
+            if (textBox.Tag is not Param tag) return;
+            string encodedUrl = HttpUtility.UrlEncode(Url.Text);
             preventTextChanged = true;
-
-            var param = sender as Param;
-            int index = QueryParamsCollection.IndexOf(param);
+            int index = QueryParamsCollection.IndexOf(tag);
             if (index == -1) return;
-            QueryParamsCollection[index] = param;
+            QueryParamsCollection[index] = tag with { key = textBox.Text };
             string query = "?" + string.Join("&", QueryParamsCollection.Select(item => ($"{item.key}={item.value}")));
-            string domain = Url.Text.Split("?")[0];
+            string domain = encodedUrl.Split("?")[0];
             Url.Text = $"{domain}{query}";
-
-            Console.WriteLine(param);
-
             args.Handled = true;
         }
 
+        void ChangeValue(object sender, RoutedEventArgs args)
+        {
+            if (sender is not TextBox textBox) return;
+            if (textBox.Tag is not Param tag) return;
+            string encodedUrl = HttpUtility.UrlEncode(Url.Text);
+            preventTextChanged = true;
+            int index = QueryParamsCollection.IndexOf(tag);
+            if (index == -1) return;
+            QueryParamsCollection[index] = tag with { value = textBox.Text };
+            string query = "?" + string.Join("&", QueryParamsCollection.Select(item => ($"{item.key}={item.value}")));
+            string domain = encodedUrl.Split("?")[0];
+            Url.Text = $"{domain}{query}";
+            args.Handled = true;
+        }
+
+
         void Add(object sender, RoutedEventArgs args)
         {
+            if (sender is not Button button) return;
+
             Param newParam = new Param(true, "", "");
-            if (QueryParamsCollection.IndexOf(newParam) != -1) return;
-            QueryParamsCollection.Add(new Param(true, "", ""));
-            string query = "?" + string.Join("&", QueryParamsCollection.Where(item => item.active).Select(item => ($"{item.key}={item.value}"))); string domain = Url.Text.Split("?")[0];
-            Url.Text = $"{domain}{query}";
+            if (button.Name == "AddParam")
+            {
+                if (QueryParamsCollection.IndexOf(newParam) != -1) return;
+                QueryParamsCollection.Add(new Param(true, "", ""));
+                string query = "?" + string.Join("&", QueryParamsCollection.Where(item => item.active).Select(item => ($"{item.key}={item.value}"))); string domain = Url.Text.Split("?")[0];
+                Url.Text = $"{domain}{query}";
+
+            }
+            if (button.Name == "AddHeader")
+            {
+                if (HeadersCollection.IndexOf(newParam) != -1) return;
+                HeadersCollection.Add(new Param(true, "", ""));
+            }
         }
 
         void Check(object sender, RoutedEventArgs args)
         {
-              preventTextChanged = true;
+            preventTextChanged = true;
 
-            var param = sender as Param;
+            if (sender is not CheckBox checkBox) return;
+
+            var param = checkBox.Tag as Param;
             int index = QueryParamsCollection.IndexOf(param);
+
             if (index == -1) return;
-            QueryParamsCollection[index] = param with { active = true };
             string query = "?" + string.Join("&", QueryParamsCollection.Where(item => item.active).Select(item => ($"{item.key}={item.value}")));
+
             string domain = Url.Text.Split("?")[0];
             Url.Text = $"{domain}{query}";
-
             args.Handled = true;
         }
 
         void Uncheck(object sender, RoutedEventArgs args)
         {
-                preventTextChanged = true;
+            preventTextChanged = true;
 
-            var param = sender as Param;
+            if (sender is not CheckBox checkBox) return;
+
+            var param = checkBox.Tag as Param;
             int index = QueryParamsCollection.IndexOf(param);
+
             if (index == -1) return;
-            QueryParamsCollection[index] = param with { active = false };
             string query = "?" + string.Join("&", QueryParamsCollection.Where(item => item.active).Select(item => ($"{item.key}={item.value}"))); string domain = Url.Text.Split("?")[0];
             Url.Text = $"{domain}{query}";
-
             args.Handled = true;
         }
 

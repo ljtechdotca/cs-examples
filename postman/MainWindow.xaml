@@ -53,7 +53,7 @@
                   <RowDefinition Height="auto" />
                 </Grid.RowDefinitions>
                 <WrapPanel Grid.Row="0">
-                  <Button Click="Add" Padding="4">
+                  <Button Click="Add" Padding="4" Name="AddParam">
                     Add Param
                   </Button>
                 </WrapPanel>
@@ -68,8 +68,8 @@
                           <ColumnDefinition Width="100" />
                         </Grid.ColumnDefinitions>
                         <CheckBox IsChecked="{Binding active}" Grid.Column="0" Checked="Check" Unchecked="Uncheck" Tag="{Binding}" Padding="4" />
-                        <TextBox Padding="4" Grid.Column="1" TextChanged="ChangeParams" Name="Key" Tag="{Binding}" Text="{Binding key}" />
-                        <TextBox Padding="4" Grid.Column="2" TextChanged="ChangeParams" Name="Value" Tag="{Binding}" Text="{Binding value}" />
+                        <TextBox Padding="4" Grid.Column="1" TextChanged="ChangeKey" Name="Key" Tag="{Binding}" Text="{Binding key}" />
+                        <TextBox Padding="4" Grid.Column="2" TextChanged="ChangeValue" Name="Value" Tag="{Binding}" Text="{Binding value}" />
                         <Button Grid.Column="3" Padding="4" Click="Remove" Tag="{Binding}">X</Button>
                       </Grid>
                     </DataTemplate>
@@ -79,7 +79,35 @@
             </ScrollViewer>
           </TabItem>
           <TabItem Header="Headers">
-
+            <Grid>
+              <Grid.RowDefinitions>
+                <RowDefinition Height="40" />
+                <RowDefinition Height="auto" />
+              </Grid.RowDefinitions>
+              <WrapPanel Grid.Row="0">
+                <Button Padding="4" Click="Add" Name="AddHeader">
+                  Add Header
+                </Button>
+              </WrapPanel>
+              <ItemsControl Name="Headers" Grid.Row="1">
+                <ItemsControl.ItemTemplate>
+                  <DataTemplate>
+                    <Grid>
+                      <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="100" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="100" />
+                      </Grid.ColumnDefinitions>
+                      <CheckBox IsChecked="{Binding active}" Grid.Column="0" Checked="Check" Unchecked="Uncheck" Tag="{Binding}" Padding="4" />
+                      <TextBox Padding="4" Grid.Column="1" TextChanged="ChangeKey" Name="Key" Tag="{Binding}" Text="{Binding key}" />
+                      <TextBox Padding="4" Grid.Column="2" TextChanged="ChangeValue" Name="Value" Tag="{Binding}" Text="{Binding value}" />
+                      <Button Grid.Column="3" Padding="4" Click="Remove" Tag="{Binding}">X</Button>
+                    </Grid>
+                  </DataTemplate>
+                </ItemsControl.ItemTemplate>
+              </ItemsControl>
+            </Grid>
           </TabItem>
           <TabItem Header="Body">
 

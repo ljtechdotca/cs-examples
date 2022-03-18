@@ -1,0 +1,23 @@
+.root {
+  display: flex;
+  gap: .25rem;
+  padding: 0 0 .25rem;
+}
+
+.container {
+  display: flex;
+  gap: .25rem;
+  height: 4rem;
+  border: 1px solid black;
+  width: 4rem;
+  align-items: center;
+  justify-content: center;
+}
+
+.container.yellow {
+  background-color: yellow;
+}
+
+.container.green {
+  background-color: green;
+}

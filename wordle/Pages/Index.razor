@@ -1,0 +1,89 @@
+﻿@inject HttpClient Http;
+
+
+@page "/"
+
+<div>
+    @for (int i = 0; i < 6; i++)
+    {
+    <div class="root">
+        @for (int j = 0; j < 5; j++)
+        {
+        <div class="container">
+            @newGrid[i][j]
+        </div>
+        }
+    </div>
+    }
+    <input @bind="input" maxlength="5" minlength="5" />
+    <button @onclick="submitInput">
+        Submit
+    </button>
+</div>
+
+@code {
+
+    protected override async Task OnInitializedAsync()
+    {
+        string awaitString = await Http.GetStringAsync("data.txt");
+        data = awaitString.Replace("\r", "").Split("\n").Select(s => s.Trim()).ToList();
+        answer = data[Random.Shared.Next(0, data.Count)];
+        initGrid();
+    }
+
+    int guess = 0;
+    List<string> data = new List<string>();
+    string answer = "hello";
+    string input = "world";
+    string[][] newGrid = new string[6][];
+
+    void initGrid()
+    {
+        for (int i = 0; i < 6; i++)
+        {
+            newGrid[i] = new string[] { "⬛", "⬛", "⬛", "⬛", "⬛" };
+        }
+    }
+
+    void checkLetters(string inputWord)
+    {
+        string[] newOutput = new string[5] { "⬛", "⬛", "⬛", "⬛", "⬛" };
+        List<char> answerArray = answer.ToList();
+        for (int i = 0; i < 5; i++)
+        {
+            Console.WriteLine("input: " + inputWord[i]);
+            Console.WriteLine("answer: " + answerArray[i]);
+            if (answerArray.Contains(inputWord[i]))
+            {
+                if (inputWord[i] == answerArray[i])
+                {
+                    newOutput[i] = "🟩";
+                }
+                else
+                {
+                    newOutput[i] = "🟨";
+                }
+            }
+            else
+            {
+                newOutput[i] = "⬛";
+            }
+        }
+        newGrid[guess] = newOutput;
+        guess++;
+    }
+
+    void submitInput()
+    {
+        string sanitizedInput = input.ToLower();
+        if (data.Contains(sanitizedInput))
+        {
+            Console.WriteLine($"checking letters {guess} ");
+            checkLetters(sanitizedInput);
+        }
+        else
+        {
+            Console.WriteLine("bad word try again");
+        }
+    }
+}

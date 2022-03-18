@@ -1,6 +1,4 @@
 Research:
-
-
   ☐ headers
     toggle headers
 
@@ -10,21 +8,17 @@ Research:
     maybe make component?
     maybe make MainWindow.xaml.2.cs
     
+  ☐ body options
+    choose between multipart form, raw, and json maybe?
+  
 Working:
-
-
   ☐ toggle params
 
-  ☐ use DataGrid `https://www.tutorialspoint.com/xaml/xaml_datagrid.htm`
-    ✔ is mapping items @done(22-03-13 18:45)
-    events are not sending data as expected and not setting when expected
-    ☐ fix on event handler
-
-  ☐ body
-    ✔ hook up to the request @done(22-03-13 16:15)
-    choose between multipart form, raw, and json maybe?
 
 Finished:
+  ✔ body @done(22-03-13 19:43)
+    ✔ hook up to the request @done(22-03-13 16:15)
+ 
   ✔ remove params @done(22-03-13 19:42)
   ✔ build tree on response @done(22-03-13 14:51)
   ✔ api testing server @done(22-03-13 14:43)
@@ -36,3 +30,7 @@ Finished:
     ✔ update params @done(22-03-12 17:12)
 
 Hidden
+  ✘ use DataGrid `https://www.tutorialspoint.com/xaml/xaml_datagrid.htm` @cancelled(22-03-13 19:43)
+    ✔ is mapping items @done(22-03-13 18:45)
+      events are not sending data as expected and not setting when expected
+        ✘ fix on event handler @cancelled(22-03-13 19:43)
