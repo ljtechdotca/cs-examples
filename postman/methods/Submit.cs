@@ -23,7 +23,7 @@ namespace postman
             QueryParamsCollection.Clear();
             foreach (var parsedQueryParam in parsedQueryParams)
             {
-                QueryParamsCollection.Add(new Param(true, parsedQueryParam as string, parsedQueryParams[parsedQueryParam as string]));
+                QueryParamsCollection.Add(new Record(true, parsedQueryParam as string, parsedQueryParams[parsedQueryParam as string]));
             }
             HttpResponseMessage response = null;
 

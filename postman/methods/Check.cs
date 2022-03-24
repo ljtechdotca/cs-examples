@@ -13,11 +13,11 @@ namespace postman
 
             if (sender is not CheckBox checkBox) return;
 
-            var param = checkBox.Tag as Param;
+            var param = checkBox.Tag as Record;
 
             if (checkBox.Name == "CheckParam")
             {
-            int index = QueryParamsCollection.IndexOf(param);
+                int index = QueryParamsCollection.IndexOf(param);
                 if (index == -1) return;
                 string query = "?" + string.Join("&", QueryParamsCollection.Where(item => item.active).Select(item => ($"{item.key}={item.value}")));
 

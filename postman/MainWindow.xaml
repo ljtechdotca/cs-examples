@@ -110,19 +110,24 @@
             </Grid>
           </TabItem>
           <TabItem Header="Body">
-
             <RichTextBox>
               <FlowDocument>
                 <Paragraph Name="RequestBody" LineHeight="1"></Paragraph>
               </FlowDocument>
             </RichTextBox>
-
           </TabItem>
         </TabControl>
       </Grid>
       <TabControl Grid.Column="1" Grid.Row="3">
         <TabItem Header="Raw">
-          <TextBlock Margin="16" Name="ResponseRaw" FontFamily="Courier New" TextWrapping="wrap" Grid.Column="1" Grid.Row="3" />
+          <Grid>
+            <Grid.RowDefinitions>
+              <RowDefinition Height="auto" />
+              <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <Button Click="ChildWindow" Grid.Row="0">New Window</Button>
+            <TextBlock Margin="16" Name="ResponseRaw" FontFamily="Courier New" TextWrapping="wrap" Grid.Row="1" />
+          </Grid>
         </TabItem>
         <TabItem Header="Tree">
           <TreeView Name="ResponseTree" />

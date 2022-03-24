@@ -11,16 +11,17 @@ namespace postman
         void ChangeValue(object sender, RoutedEventArgs args)
         {
             if (sender is not TextBox textBox) return;
-            if (textBox.Tag is not Param tag) return;
+            if (textBox.Tag is not Record tag) return;
             if (textBox.Name == "ValueParam")
             {
-                string encodedUrl = HttpUtility.UrlEncode(Url.Text);
-                preventTextChanged = true;
+                // string encodedUrl = HttpUtility.UrlEncode(Url.Text);
+                // epic:  [00:10] !%KanawanagasakiYoko: HttpUtility.UrlEncode is used to encode keys and values of Query!
+                // epic: [00:10] !%KanawanagasakiYoko: if you apply HttpUtility.UrlEncode to whole url it will do this: https%3a%2f%2fljtech.ca%2f%3fhello%3dwolrd to https://ljtech.ca/?hello=wolrd                preventTextChanged = true;
                 int index = QueryParamsCollection.IndexOf(tag);
                 if (index == -1) return;
                 QueryParamsCollection[index] = tag with { value = textBox.Text };
                 string query = "?" + string.Join("&", QueryParamsCollection.Select(item => ($"{item.key}={item.value}")));
-                string domain = encodedUrl.Split("?")[0];
+                string domain = Url.Text.Split("?")[0];
                 Url.Text = $"{domain}{query}";
                 args.Handled = true;
             }

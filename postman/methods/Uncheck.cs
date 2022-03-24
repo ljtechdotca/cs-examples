@@ -13,17 +13,19 @@ namespace postman
 
             if (sender is not CheckBox checkBox) return;
 
-            var param = checkBox.Tag as Param;
-            if (checkBox.Name == "CheckParam") {
-            int index = QueryParamsCollection.IndexOf(param);
+            var param = checkBox.Tag as Record;
+            if (checkBox.Name == "CheckParam")
+            {
+                int index = QueryParamsCollection.IndexOf(param);
 
-            if (index == -1) return;
-            string query = "?" + string.Join("&", QueryParamsCollection.Where(item => item.active).Select(item => ($"{item.key}={item.value}"))); string domain = Url.Text.Split("?")[0];
-            Url.Text = $"{domain}{query}";
-            args.Handled = true;
+                if (index == -1) return;
+                string query = "?" + string.Join("&", QueryParamsCollection.Where(item => item.active).Select(item => ($"{item.key}={item.value}"))); string domain = Url.Text.Split("?")[0];
+                Url.Text = $"{domain}{query}";
+                args.Handled = true;
             }
 
-            if (checkBox.Name == "CheckHeader") {
+            if (checkBox.Name == "CheckHeader")
+            {
                 Console.WriteLine("Hello world this is uncheck speaking.");
             }
         }

@@ -1,36 +1,15 @@
 Research:
-  ☐ headers
-    toggle headers
-
-  ☐ popup for response
-
-  ☐ abstract code from MainWindow
-    maybe make component?
-    maybe make MainWindow.xaml.2.cs
-    
-  ☐ body options
-    choose between multipart form, raw, and json maybe?
-  
+  ☐ response should have user copy / select
 Working:
-  ☐ toggle params
 
-
+  
 Finished:
-  ✔ body @done(22-03-13 19:43)
-    ✔ hook up to the request @done(22-03-13 16:15)
- 
-  ✔ remove params @done(22-03-13 19:42)
-  ✔ build tree on response @done(22-03-13 14:51)
-  ✔ api testing server @done(22-03-13 14:43)
-  ✔ treeview ` https://docs.microsoft.com/en-us/dotnet/desktop/wpf/controls/treeview-overview?view=netframeworkdesktop-4.8 ` @done(22-03-13 02:41)
-  ✔ follow Kanas' gist because its massive brain stuff @done(22-03-12 19:00)
-  ✔ interactive url and params @done(22-03-12 17:12)
-    ✔ add params @done(22-03-12 17:12)
-    ✔ remove params @done(22-03-12 17:12)
-    ✔ update params @done(22-03-12 17:12)
+  ✔ popup windows @done(22-03-19 00:45)
+  ✔ change Param to Record @done(22-03-18 23:55)
+  ✔ query params fill out value side first not key @done(22-03-19 00:08)
+  ✔ query params causes %252525252 (maybe encode error) @done(22-03-19 00:09)
 
 Hidden
-  ✘ use DataGrid `https://www.tutorialspoint.com/xaml/xaml_datagrid.htm` @cancelled(22-03-13 19:43)
-    ✔ is mapping items @done(22-03-13 18:45)
-      events are not sending data as expected and not setting when expected
-        ✘ fix on event handler @cancelled(22-03-13 19:43)
+  ☐ refactor /methods
+  ☐ body options
+    choose between multipart form, raw, and json maybe?

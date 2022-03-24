@@ -1,0 +1,26 @@
+✔ style buttons white @done(22-03-23 01:06)
+
+✔ remove color button add to swatch @done(22-03-23 01:09)
+
+✔ center brush ellipse @done(22-03-23 01:28)
+
+✔ fix settings height @done(22-03-23 01:28)
+
+✔ add editing modes @done(22-03-23 01:53)
+  ✔ erase @done(22-03-23 01:53)
+  ✔ ink @done(22-03-23 01:53)
+
+✔ active brush mode is highlighted @done(22-03-23 02:30)
+
+✔ close all windows on main window close @done(22-03-23 02:37)
+
+✔ ctrl + z @done(22-03-23 03:44)
+
+✔ cannot close and reopen ColorWindow and BrushWindow @done(22-03-23 21:16)
+
+☐ icon
+
+☐ publish exe
+
+☐ ctrl + y
+

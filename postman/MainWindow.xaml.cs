@@ -7,13 +7,13 @@ using Newtonsoft.Json.Linq;
 
 namespace postman
 {
-    public record Param(bool active, string key, string value);
+    public record Record(bool active, string key, string value);
 
     public partial class MainWindow : Window
     {
         static readonly HttpClient client = new HttpClient();
-        private ObservableCollection<Param> QueryParamsCollection = new();
-        private ObservableCollection<Param> HeadersCollection = new();
+        private ObservableCollection<Record> QueryParamsCollection = new();
+        private ObservableCollection<Record> HeadersCollection = new();
         private ObservableCollection<TreeViewItem> ResponseTreeCollection = new();
         private bool preventTextChanged = false;
 
@@ -36,5 +36,15 @@ namespace postman
 }");
             BuildTree(JsonConvert.DeserializeObject<JToken>(ResponseRaw.Text));
         }
+
+        void ChildWindow(object sender, RoutedEventArgs args) {
+            ChildWindow window = new ChildWindow();
+            window.Name = "Response";
+            window.Owner = Application.Current.MainWindow;
+            window.Show();
+            window.Content = ResponseRaw.Text;
+            
+        }
+
     }
 }

@@ -9,8 +9,8 @@ namespace postman
         void Remove(object sender, RoutedEventArgs args)
         {
             Button button = (Button)sender;
-            Param tag = button.Tag as Param;
-            QueryParamsCollection.Remove(tag as Param);
+            Record tag = button.Tag as Record;
+            QueryParamsCollection.Remove(tag as Record);
             string query = "";
             string domain = Url.Text.Split("?")[0];
             if (QueryParamsCollection.Count > 0)
