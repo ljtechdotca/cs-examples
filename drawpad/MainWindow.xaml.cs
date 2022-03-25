@@ -19,54 +19,79 @@ public partial class MainWindow : Window
         Ink,
     }
 
-    public Collection<DrawWindow> DrawWindows = new();
-    public BrushWindow BrushWindow;
-    public ColorWindow ColorWindow;
-    public EditingMode CurrentEditingMode = EditingMode.Ink;
+    public SolidColorBrush solidColorBrush = new SolidColorBrush(System.Windows.Media.Color.FromArgb(255, 255, 0, 255));
+    public double brushSize = 16;
+
+    public Collection<DrawWindow> drawWindows = new();
+    public SettingsWindow settingsWindow;
+    public EditingMode currentEditingMode = EditingMode.Ink;
 
     public MainWindow()
     {
-        this.BrushWindow = new BrushWindow(this, new SolidColorBrush(System.Windows.Media.Color.FromArgb(255, 255, 0, 0)), 50);
-        this.ColorWindow = new ColorWindow(this, new SolidColorBrush(System.Windows.Media.Color.FromArgb(255, 255, 0, 0)));
+
+        settingsWindow = new SettingsWindow(this, solidColorBrush, brushSize);
+        settingsWindow.Show();
+
         InitializeComponent();
-        DrawWindow_Clear(null, null);
-        PrimaryColorSwatch.Background = new SolidColorBrush(ColorWindow.PrimaryColor);
+
+        InkMode.Foreground = new SolidColorBrush(System.Windows.Media.Color.FromArgb(255, 100, 100, 100));
+        ColorSwatch.Background = solidColorBrush;
+
+        DrawWindows_Init(solidColorBrush);
     }
 
-    private void DrawWindow_Clear(object? sender, EventArgs? e)
+    private void DrawWindows_Clear(object sender, RoutedEventArgs e)
     {
-        if (DrawWindows.Count > 0)
+
+    }
+
+    public void DrawWindows_Init(SolidColorBrush solidColorBrush)
+    {
+        if (drawWindows.Count > 0)
         {
-            foreach (var DrawWindow in DrawWindows)
+            foreach (var DrawWindow in drawWindows)
             {
                 DrawWindow.Close();
             }
-            DrawWindows.Clear();
+            drawWindows.Clear();
         }
-        foreach (var Screen in Screen.AllScreens)
+        foreach (var screen in Screen.AllScreens)
         {
-            DrawWindow drawWindow = new DrawWindow(Screen);
-            ColorWindow.SetColors();
-            DrawWindows.Add(drawWindow);
+            DrawWindow drawWindow = new DrawWindow(screen, brushSize, solidColorBrush);
+            drawWindows.Add(drawWindow);
         }
     }
 
-    private void BrushWindow_Open(object sender, RoutedEventArgs e)
+    public void DrawAttributes_Color(SolidColorBrush solidColorBrush)
     {
-        BrushWindow.Show();
+        foreach (var drawWindow in drawWindows)
+        {
+            drawWindow.InkCanvas.DefaultDrawingAttributes.Color = solidColorBrush.Color;
+        }
     }
 
-    private void ColorWindow_Open(object sender, RoutedEventArgs e)
+    public void DrawAttributes_Size()
     {
-        ColorWindow.Show();
+        foreach (var drawWindow in drawWindows)
+        {
+            drawWindow.InkCanvas.DefaultDrawingAttributes.Width = brushSize;
+            drawWindow.InkCanvas.DefaultDrawingAttributes.Height = brushSize;
+        }
+    }
+
+    private void SettingsWindow_Open(object sender, RoutedEventArgs e)
+    {
+        settingsWindow.Close();
+        this.settingsWindow = new SettingsWindow(this, solidColorBrush, brushSize);
+        settingsWindow.Show();
     }
 
     private void EraserMode_Click(object sender, RoutedEventArgs e)
     {
-        CurrentEditingMode = EditingMode.Erase;
-        EraserMode.Foreground = new SolidColorBrush(Color.FromArgb(255, 255, 0, 0));
+        currentEditingMode = EditingMode.Erase;
+        EraserMode.Foreground = new SolidColorBrush(Color.FromArgb(255, 100, 100, 100));
         InkMode.Foreground = new SolidColorBrush(Color.FromArgb(255, 0, 0, 0));
-        foreach (var DrawWindow in DrawWindows)
+        foreach (var DrawWindow in drawWindows)
         {
             DrawWindow.InkCanvas.EditingMode = InkCanvasEditingMode.EraseByStroke;
         }
@@ -74,10 +99,10 @@ public partial class MainWindow : Window
 
     private void InkMode_Click(object sender, RoutedEventArgs e)
     {
-        CurrentEditingMode = EditingMode.Ink;
+        currentEditingMode = EditingMode.Ink;
         EraserMode.Foreground = new SolidColorBrush(Color.FromArgb(255, 0, 0, 0));
-        InkMode.Foreground = new SolidColorBrush(Color.FromArgb(255, 255, 0, 0));
-        foreach (var DrawWindow in DrawWindows)
+        InkMode.Foreground = new SolidColorBrush(Color.FromArgb(255, 100, 100, 100));
+        foreach (var DrawWindow in drawWindows)
         {
             DrawWindow.InkCanvas.EditingMode = InkCanvasEditingMode.Ink;
         }
@@ -85,13 +110,12 @@ public partial class MainWindow : Window
 
     private void MainWindow_Closing(object sender, CancelEventArgs e)
     {
-        foreach (var DrawWindow in DrawWindows)
+        foreach (var DrawWindow in drawWindows)
         {
             DrawWindow.Close();
         }
-        BrushWindow.Close();
-        ColorWindow.Close();
-        DrawWindows.Clear();
+        settingsWindow.Close();
+        drawWindows.Clear();
     }
 }
 

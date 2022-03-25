@@ -1,26 +1,20 @@
-✔ style buttons white @done(22-03-23 01:06)
+✔ primarySolidColorBrush and secondarySolidColorBrush need to be on each drawWindow @done(22-03-24 20:44)
+✔ fix drawWindow titles @done(22-03-24 21:21)
+✔ colorWindow handles primary and secondary @done(22-03-24 21:21)
+✔ close window instances on open @done(22-03-24 21:21)
 
-✔ remove color button add to swatch @done(22-03-23 01:09)
 
-✔ center brush ellipse @done(22-03-23 01:28)
+✔ combine BrushWindow and ColorWindow together into a SettingsWindow @done(22-03-24 21:53)
+✔ remove SelectedBrush enum (remove logic from the radios) @done(22-03-24 21:53)
+✘ fix the selected brush radios @cancelled(22-03-24 21:54)
+✔ fix the mainWindow layout @done(22-03-24 23:25)
 
-✔ fix settings height @done(22-03-23 01:28)
+color swatches update:
+  ✔ create a collection of SolidColorBrush from the inkCanvas.Strokes<Collection> @done(22-03-24 23:25)
+  ✔ color swatch changes the current color @done(22-03-24 23:25)
+  maybe just have 1 solid color brush and a collection of swatches used
 
-✔ add editing modes @done(22-03-23 01:53)
-  ✔ erase @done(22-03-23 01:53)
-  ✔ ink @done(22-03-23 01:53)
 
-✔ active brush mode is highlighted @done(22-03-23 02:30)
-
-✔ close all windows on main window close @done(22-03-23 02:37)
-
-✔ ctrl + z @done(22-03-23 03:44)
-
-✔ cannot close and reopen ColorWindow and BrushWindow @done(22-03-23 21:16)
-
-☐ icon
-
-☐ publish exe
-
-☐ ctrl + y
-
+☐ hotkey to swap between 
+  this might cause issues when swapping between mroe than one DrawWindow
+  ☐ stretch one DrawWindow acress all devices 

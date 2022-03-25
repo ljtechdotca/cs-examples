@@ -3,9 +3,14 @@
   <PropertyGroup>
     <ApplicationIcon>drawpad.ico</ApplicationIcon>
     <PublishSingleFile>true</PublishSingleFile>
-    <OutputType>WinExe</OutputType>
+    <OutputType>Exe</OutputType>
+    <DebugType>None</DebugType>
+    <DebugSymbols>false</DebugSymbols>
     <TargetFramework>net6.0-windows</TargetFramework>
     <Nullable>enable</Nullable>
+    <SelfContained>false</SelfContained>
+    <RuntimeIdentifier>win-x64</RuntimeIdentifier>
+    <AssemblyName>DrawPad</AssemblyName>
     <UseWindowsForms>true</UseWindowsForms>
     <UseWPF>true</UseWPF>
   </PropertyGroup>

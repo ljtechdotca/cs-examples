@@ -13,15 +13,20 @@ namespace drawpad;
 /// </summary>
 public partial class DrawWindow : Window
 {
-    public DrawWindow(Screen Screen)
-    {
-        InitializeComponent();
+    StrokeCollection redoStrokes = new();
 
-        this.Title = Screen.DeviceName;
-        this.Width = Screen.WorkingArea.Width;
-        this.Height = Screen.WorkingArea.Height;
-        this.Left = Screen.Bounds.X;
-        this.Top = Screen.Bounds.Y;
+    public DrawWindow(Screen screen, double brushSize, SolidColorBrush solidColorBrush)
+    {
+        this.Title = screen.DeviceName;
+        this.Width = screen.WorkingArea.Width;
+        this.Height = screen.WorkingArea.Height;
+        this.Left = screen.Bounds.X;
+        this.Top = screen.Bounds.Y;
+
+        InitializeComponent();
+        InkCanvas.DefaultDrawingAttributes.Height = brushSize;
+        InkCanvas.DefaultDrawingAttributes.Width = brushSize;
+        InkCanvas.DefaultDrawingAttributes.Color = solidColorBrush.Color;
         InkCanvas.DefaultDrawingAttributes.FitToCurve = true;
         KeyUp += CheckKey_KeyUp;
         this.Show();
@@ -29,9 +34,18 @@ public partial class DrawWindow : Window
 
     private void CheckKey_KeyUp(object sender, System.Windows.Input.KeyEventArgs e)
     {
-        if (e.Key == Key.Z && Keyboard.Modifiers.HasFlag(ModifierKeys.Control) && InkCanvas.Strokes.Count > 0)
+        if (Keyboard.Modifiers.HasFlag(ModifierKeys.Control))
         {
-            InkCanvas.Strokes.RemoveAt(InkCanvas.Strokes.Count - 1);
+            if (e.Key == Key.Z && InkCanvas.Strokes.Count > 0)
+            {
+                redoStrokes.Add(InkCanvas.Strokes[InkCanvas.Strokes.Count - 1]);
+                InkCanvas.Strokes.RemoveAt(InkCanvas.Strokes.Count - 1);
+            }
+            if (e.Key == Key.Y && redoStrokes.Count > 0)
+            {
+                InkCanvas.Strokes.Add(redoStrokes[redoStrokes.Count - 1]);
+                redoStrokes.RemoveAt(redoStrokes.Count - 1);
+            }
         }
     }
 
@@ -47,6 +61,17 @@ public partial class DrawWindow : Window
         SolidColorBrush transparentBrush = new SolidColorBrush(System.Windows.Media.Color.FromArgb(0, 0, 0, 0));
         this.Background = transparentBrush;
         InkCanvas.Background = transparentBrush;
+    }
+
+    public void InkCanvasAttributes_Color(Color color)
+    {
+        InkCanvas.DefaultDrawingAttributes.Color = color;
+    }
+
+    public void InkCanvasAttributes_Size(double size)
+    {
+        InkCanvas.DefaultDrawingAttributes.Height = size;
+        InkCanvas.DefaultDrawingAttributes.Width = size;
     }
 }
 
